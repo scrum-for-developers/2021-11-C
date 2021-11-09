@@ -31,5 +31,11 @@
         Added more helpful error messages
       </action>
     </release>
+    <release version="1.0.2" date="2021-11-09"
+             description="Upgrade Spring">
+      <action dev="Team schiggy" type="update">
+        Upgrade spring version to 2.5.6
+      </action>
+    </release>
   </body>
 </document>
