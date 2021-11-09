@@ -24,5 +24,12 @@
 				Return all borrowed books by one member.
 			</action>
 		</release>
-	</body>
+
+    <release version="1.0.1" date="2021-11-09"
+             description="Added more helpful error messages">
+      <action dev="Team schiggy" type="update">
+        Added more helpful error messages
+      </action>
+    </release>
+  </body>
 </document>
