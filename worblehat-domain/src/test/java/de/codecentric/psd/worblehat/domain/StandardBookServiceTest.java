@@ -11,6 +11,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.time.LocalDate;
 import java.util.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -18,9 +19,11 @@ import org.mockito.Mock;
 
 class StandardBookServiceTest {
 
-  @Mock private BorrowingRepository borrowingRepository;
+  @Mock
+  private BorrowingRepository borrowingRepository;
 
-  @Mock private BookRepository bookRepository;
+  @Mock
+  private BookRepository bookRepository;
 
   private BookService bookService;
 
@@ -36,24 +39,24 @@ class StandardBookServiceTest {
   void setup() {
     initMocks(this);
 
-    aBook = new Book("title", "author", "edition", "isbn", 2016);
-    aCopyofBook = new Book("title", "author", "edition", "isbn", 2016);
-    anotherBook = new Book("title2", "author2", "edition2", "isbn2", 2016);
+    aBook = new Book("title", "author", "edition", "isbn","description", 2016);
+    aCopyofBook = new Book("title", "author", "edition", "isbn","description", 2016);
+    anotherBook = new Book("title2", "author2", "edition2", "isbn2","description2", 2016);
 
-    aBorrowedBook = new Book("title", "author", "edition", "isbn", 2016);
+    aBorrowedBook = new Book("title", "author", "edition", "isbn","description", 2016);
     aBorrowing = new Borrowing(aBorrowedBook, BORROWER_EMAIL, NOW);
     aBorrowedBook.borrowNowByBorrower(BORROWER_EMAIL);
 
-    aCopyofBorrowedBook = new Book("title", "author", "edition", "isbn", 2016);
+    aCopyofBorrowedBook = new Book("title", "author", "edition", "isbn","description", 2016);
     aBorrowingOfCopy = new Borrowing(aCopyofBorrowedBook, BORROWER_EMAIL, NOW);
     aCopyofBorrowedBook.borrowNowByBorrower(BORROWER_EMAIL);
 
-    anotherBorrowedBook = new Book("title2", "author2", "edition2", "isbn2", 2016);
+    anotherBorrowedBook = new Book("title2", "author2", "edition2", "isbn2","description2", 2016);
     anotherBorrowing = new Borrowing(anotherBorrowedBook, BORROWER_EMAIL, NOW);
     anotherBorrowedBook.borrowNowByBorrower(BORROWER_EMAIL);
 
     when(borrowingRepository.findBorrowingsByBorrower(BORROWER_EMAIL))
-        .thenReturn(Arrays.asList(aBorrowing, anotherBorrowing));
+      .thenReturn(Arrays.asList(aBorrowing, anotherBorrowing));
 
     when(borrowingRepository.findBorrowingForBook(aBook)).thenReturn(null);
 
@@ -71,7 +74,7 @@ class StandardBookServiceTest {
     for (Map.Entry<String, Set<Book>> entry : bookCopies.entrySet()) {
       when(bookRepository.findByIsbn(entry.getKey())).thenReturn(entry.getValue());
       when(bookRepository.findTopByIsbn(entry.getKey()))
-          .thenReturn(Optional.of(entry.getValue().iterator().next()));
+        .thenReturn(Optional.of(entry.getValue().iterator().next()));
     }
   }
 
@@ -88,7 +91,7 @@ class StandardBookServiceTest {
     bookService.borrowBook(aBook.getIsbn(), BORROWER_EMAIL);
     verify(borrowingRepository).save(borrowingArgumentCaptor.capture());
     assertThat(
-        borrowingArgumentCaptor.getValue().getBorrowerEmailAddress(), equalTo(BORROWER_EMAIL));
+      borrowingArgumentCaptor.getValue().getBorrowerEmailAddress(), equalTo(BORROWER_EMAIL));
   }
 
   @Test()
@@ -106,8 +109,8 @@ class StandardBookServiceTest {
     verify(borrowingRepository).save(borrowingArgumentCaptor.capture());
     assertThat(borrowingArgumentCaptor.getValue().getBorrowerEmailAddress(), is(BORROWER_EMAIL));
     assertThat(
-        borrowingArgumentCaptor.getValue().getBorrowedBook(),
-        either(is(aBook)).or(is(aCopyofBook)));
+      borrowingArgumentCaptor.getValue().getBorrowedBook(),
+      either(is(aBook)).or(is(aCopyofBook)));
   }
 
   @Test
@@ -133,11 +136,12 @@ class StandardBookServiceTest {
   void shouldCreateBook() {
     when(bookRepository.save(any(Book.class))).thenReturn(aBook);
     bookService.createBook(
-        aBook.getTitle(),
-        aBook.getAuthor(),
-        aBook.getEdition(),
-        aBook.getIsbn(),
-        aBook.getYearOfPublication());
+      aBook.getTitle(),
+      aBook.getAuthor(),
+      aBook.getEdition(),
+      aBook.getIsbn(),
+      aBook.getDescription(),
+      aBook.getYearOfPublication());
 
     // assert that book was saved to repository
     ArgumentCaptor<Book> bookArgumentCaptor = ArgumentCaptor.forClass(Book.class);
@@ -149,18 +153,19 @@ class StandardBookServiceTest {
     assertThat(bookArgumentCaptor.getValue().getEdition(), is(aBook.getEdition()));
     assertThat(bookArgumentCaptor.getValue().getIsbn(), is(aBook.getIsbn()));
     assertThat(
-        bookArgumentCaptor.getValue().getYearOfPublication(), is(aBook.getYearOfPublication()));
+      bookArgumentCaptor.getValue().getYearOfPublication(), is(aBook.getYearOfPublication()));
   }
 
   @Test
   void shouldCreateAnotherCopyOfExistingBook() {
     when(bookRepository.save(any(Book.class))).thenReturn(aBook);
     bookService.createBook(
-        aBook.getTitle(),
-        aBook.getAuthor(),
-        aBook.getEdition(),
-        aBook.getIsbn(),
-        aBook.getYearOfPublication());
+      aBook.getTitle(),
+      aBook.getAuthor(),
+      aBook.getEdition(),
+      aBook.getIsbn(),
+      aBook.getDescription(),
+      aBook.getYearOfPublication());
     verify(bookRepository, times(1)).save(any(Book.class));
   }
 
@@ -168,11 +173,12 @@ class StandardBookServiceTest {
   void shouldNotCreateAnotherCopyOfExistingBookWithDifferentTitle() {
     givenALibraryWith(aBook);
     bookService.createBook(
-        aBook.getTitle() + "X",
-        aBook.getAuthor(),
-        aBook.getEdition(),
-        aBook.getIsbn(),
-        aBook.getYearOfPublication());
+      aBook.getTitle() + "X",
+      aBook.getAuthor(),
+      aBook.getEdition(),
+      aBook.getIsbn(),
+      aBook.getDescription(),
+      aBook.getYearOfPublication());
     verify(bookRepository, times(0)).save(any(Book.class));
   }
 
@@ -180,11 +186,12 @@ class StandardBookServiceTest {
   void shouldNotCreateAnotherCopyOfExistingBookWithDifferentAuthor() {
     givenALibraryWith(aBook);
     bookService.createBook(
-        aBook.getTitle(),
-        aBook.getAuthor() + "X",
-        aBook.getEdition(),
-        aBook.getIsbn(),
-        aBook.getYearOfPublication());
+      aBook.getTitle(),
+      aBook.getAuthor() + "X",
+      aBook.getEdition(),
+      aBook.getIsbn(),
+      aBook.getDescription(),
+      aBook.getYearOfPublication());
     verify(bookRepository, times(0)).save(any(Book.class));
   }
 
