@@ -47,6 +47,9 @@
       <action dev="Team Schiggy" type="update">
         A book with a new Edition now also needs to have a different ISBN.
       </action>
+      <action dev="Team Schiggy" type="update">
+        Added Version number to Home screen.
+      </action>
     </release>
   </body>
 </document>
