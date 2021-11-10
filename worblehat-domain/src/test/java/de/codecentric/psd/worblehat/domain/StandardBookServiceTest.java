@@ -196,6 +196,19 @@ class StandardBookServiceTest {
   }
 
   @Test
+  void shouldNotCreateAnotherCopyOfExistingBookWithDifferentEdition() {
+    givenALibraryWith(aBook);
+    bookService.createBook(
+      aBook.getTitle(),
+      aBook.getAuthor(),
+      aBook.getEdition() + 1,
+      aBook.getIsbn(),
+      aBook.getDescription(),
+      aBook.getYearOfPublication());
+    verify(bookRepository, times(0)).save(any(Book.class));
+  }
+
+  @Test
   void shouldFindAllBooks() {
     List<Book> expectedBooks = new ArrayList<>();
     expectedBooks.add(aBook);
