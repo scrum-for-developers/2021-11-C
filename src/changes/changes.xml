@@ -44,6 +44,9 @@
       <action dev="Team Schiggy" type="update">
         Added support for 13-digit ISBNs
       </action>
+      <action dev="Team Schiggy" type="update">
+        A book with a new Edition now also needs to have a different ISBN.
+      </action>
     </release>
   </body>
 </document>
