@@ -8,8 +8,10 @@ import static org.mockito.Mockito.*;
 import de.codecentric.psd.worblehat.domain.Book;
 import de.codecentric.psd.worblehat.domain.BookService;
 import de.codecentric.psd.worblehat.web.formdata.BookDataFormData;
+
 import java.util.HashMap;
 import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ModelMap;
@@ -27,7 +29,7 @@ class InsertBookControllerTest {
 
   private BindingResult bindingResult;
 
-  private static final Book TEST_BOOK = new Book("title", "author", "edition", "isbn", 2016);
+  private static final Book TEST_BOOK = new Book("title", "author", "edition", "isbn", "description", 2016);
 
   @BeforeEach
   public void setUp() {
@@ -58,8 +60,8 @@ class InsertBookControllerTest {
   @Test
   void shouldCreateBookAndNavigateToBookList() {
     setupFormData();
-    when(bookService.createBook(any(), any(), any(), any(), anyInt()))
-        .thenReturn(Optional.of(TEST_BOOK));
+    when(bookService.createBook(any(), any(), any(), any(), any(), anyInt()))
+      .thenReturn(Optional.of(TEST_BOOK));
 
     String navigateTo = insertBookController.processSubmit(bookDataFormData, bindingResult);
 
@@ -70,29 +72,31 @@ class InsertBookControllerTest {
   @Test
   void shouldStayOnInsertBookPageWhenCreatingBookFails() {
     setupFormData();
-    when(bookService.createBook(any(), any(), any(), any(), anyInt())).thenReturn(Optional.empty());
+    when(bookService.createBook(any(), any(), any(), any(), any(), anyInt())).thenReturn(Optional.empty());
 
     String navigateTo = insertBookController.processSubmit(bookDataFormData, bindingResult);
 
     verifyBookIsCreated();
     assertThat(
-        bindingResult.getGlobalErrors(),
-        hasItem(hasProperty("codes", hasItemInArray("duplicateIsbn"))));
+      bindingResult.getGlobalErrors(),
+      hasItem(hasProperty("codes", hasItemInArray("duplicateIsbn"))));
     assertThat(navigateTo, is("insertBooks"));
   }
 
   private void verifyBookIsCreated() {
     verify(bookService)
-        .createBook(
-            TEST_BOOK.getTitle(),
-            TEST_BOOK.getAuthor(),
-            TEST_BOOK.getEdition(),
-            TEST_BOOK.getIsbn(),
-            TEST_BOOK.getYearOfPublication());
+      .createBook(
+        TEST_BOOK.getTitle(),
+        TEST_BOOK.getAuthor(),
+        TEST_BOOK.getEdition(),
+        TEST_BOOK.getIsbn(),
+        TEST_BOOK.getDescription(),
+        TEST_BOOK.getYearOfPublication());
   }
 
   private void setupFormData() {
     bookDataFormData.setTitle(TEST_BOOK.getTitle());
+    bookDataFormData.setDescription(TEST_BOOK.getDescription());
     bookDataFormData.setAuthor(TEST_BOOK.getAuthor());
     bookDataFormData.setEdition(TEST_BOOK.getEdition());
     bookDataFormData.setIsbn(TEST_BOOK.getIsbn());

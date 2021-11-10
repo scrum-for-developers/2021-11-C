@@ -2,10 +2,13 @@ package de.codecentric.psd.worblehat.web.formdata;
 
 import de.codecentric.psd.worblehat.web.validation.ISBN;
 import de.codecentric.psd.worblehat.web.validation.Numeric;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 
-/** This class represent the form data of the add book form. */
+/**
+ * This class represent the form data of the add book form.
+ */
 public class BookDataFormData {
 
   @NotEmpty(message = "{empty.bookDataFormData.title}")
@@ -26,6 +29,8 @@ public class BookDataFormData {
 
   @NotEmpty(message = "{empty.bookDataFormData.author}")
   private String author;
+
+  private String description;
 
   public String getYearOfPublication() {
     return yearOfPublication;
@@ -67,18 +72,23 @@ public class BookDataFormData {
     this.edition = edition;
   }
 
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
   @Override
   public String toString() {
-    return "BookDataFormData [title="
-        + title
-        + ", edition="
-        + edition
-        + ", yearOfPublication="
-        + yearOfPublication
-        + ", isbn="
-        + isbn
-        + ", author="
-        + author
-        + "]";
+    return "BookDataFormData{" +
+      "title='" + title + '\'' +
+      ", edition='" + edition + '\'' +
+      ", yearOfPublication='" + yearOfPublication + '\'' +
+      ", isbn='" + isbn + '\'' +
+      ", author='" + author + '\'' +
+      ", description='" + description + '\'' +
+      '}';
   }
 }

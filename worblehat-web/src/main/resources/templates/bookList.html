@@ -11,6 +11,7 @@
   <tr>
     <th scope="col">ISBN</th>
     <th scope="col">Title</th>
+    <th scope="col">Description</th>
     <th scope="col">Author</th>
     <th scope="col">Year</th>
     <th scope="col">Edition</th>
@@ -21,6 +22,7 @@
   <tr th:each="book : ${books}">
     <th th:text="${book.isbn}" scope="row">123456</th>
     <td th:text="${book.title}">Harry Potter</td>
+    <td th:text="${book.description}">Description</td>
     <td th:text="${book.author}">J.K. Rowling</td>
     <td th:text="${book.yearOfPublication}">2002</td>
     <td th:text="${book.edition}">1st</td>
