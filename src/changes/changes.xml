@@ -39,5 +39,11 @@
         Added book description
       </action>
     </release>
+    <release version="1.3.0" date="2021-11-10"
+             description="Added 13-digit ISBNs">
+      <action dev="Team Schiggy" type="update">
+        Added support for 13-digit ISBNs
+      </action>
+    </release>
   </body>
 </document>
